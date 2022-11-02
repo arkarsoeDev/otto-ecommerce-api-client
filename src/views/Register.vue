@@ -1,0 +1,89 @@
+<template>
+   <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div class="w-full max-w-md space-y-8">
+         <div>
+            <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+               alt="Your Company" />
+            <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register for free</h2>
+
+         </div>
+         <div v-if="Object.keys(errMsgs).length > 0" class="bg-red-600 p-5 py-7 border rounded-lg text-white space-y-2 relative">
+            <div>
+               <div v-for="(errMsg, key) in errMsgs" :key="key">
+                  {{ key }} : {{ errMsg[0] }}
+               </div>
+            </div>
+            <button @click="errMsgs = ''" class="absolute right-1 -top-1 z-10 p-1 rounded-full hover:bg-black hover:bg-opacity-60 hover:cursor-pointer">
+               <XMarkIcon class="h-5 w-5 text-white" aria-hidden="true" />
+            </button>
+         </div>
+         <form class="mt-8 space-y-6" @submit.prevent="register">
+            <input type="hidden" name="remember" value="true" />
+            <div class="-space-y-px rounded-md shadow-sm">
+               <div>
+                  <label for="name" class="sr-only">Name</label>
+                  <input id="name" name="name" type="text" autocomplete="name" required=""
+                     class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                     placeholder="Name" v-model="user.name" />
+               </div>
+               <div>
+                  <label for="email-address" class="sr-only">Email address</label>
+                  <input id="email-address" name="email" type="email" autocomplete="email" required=""
+                     class="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                     placeholder="Email address" v-model="user.email" />
+               </div>
+               <div>
+                  <label for="password" class="sr-only">Password</label>
+                  <input id="password" name="password" type="password" autocomplete="current-password" required=""
+                     class="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                     placeholder="Password" v-model="user.password" />
+               </div>
+               <div>
+                  <label for="password_confirmation" class="sr-only">Password Confirmation</label>
+                  <input id="password_confirmation" name="password_confirmation" type="password"
+                     autocomplete="password_confirmation" required=""
+                     class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                     placeholder="Password Confirmation" v-model="user.password_confirmation" />
+               </div>
+            </div>
+
+            <div>
+               <button type="submit"
+                  class="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                     <LockClosedIcon class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+                  </span>
+                  Sign in
+               </button>
+            </div>
+         </form>
+      </div>
+   </div>
+</template>
+
+<script setup>
+import { LockClosedIcon, XMarkIcon } from '@heroicons/vue/20/solid'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/user';
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const user = {
+   name: '',
+   email: '',
+   password: '',
+   password_confirmation: '',
+}
+
+const errMsgs = ref({})
+
+function register() {
+   userStore.register(user)
+      .then((res) => {
+         console.log(res)
+         router.push({ name: 'Dashboard' })
+      }).catch(err => errMsgs.value = err.response.data.errors)
+}
+</script>
