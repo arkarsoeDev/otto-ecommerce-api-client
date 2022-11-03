@@ -46,10 +46,8 @@
 <script setup>
 import { LockClosedIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 
-const router = useRouter();
 const userStore = useUserStore();
 
 const user = {

@@ -3,7 +3,7 @@ import DefaultLayout from "@/views/Layout/DefaultLayout.vue";
 import DashboardLayout from "@/views/Layout/DashboardLayout.vue";
 import AuthLayout from "@/views/Layout/AuthLayout.vue";
 import Home from "@/views/Front/Home.vue";
-import Products from "@/views/Front/Products.vue";
+import Shop from "@/views/Front/Shop.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Dashboard from "@/views/Dashboard/Dashboard.vue";
@@ -24,9 +24,9 @@ const router = createRouter({
                     component: Home,
                 },
                 {
-                    path: "/products",
-                    name: "Products",
-                    component: Products,
+                    path: "/shop",
+                    name: "Shop",
+                    component: Shop,
                 },
             ],
         },

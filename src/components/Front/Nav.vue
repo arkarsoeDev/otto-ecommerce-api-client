@@ -1,5 +1,5 @@
 <template>
-   <section class="hero bg-blue-100 h-screen bg-[url('../assets/img/slide2.jpg')] bg-no-repeat bg-cover bg-[60%_top]">
+   <section :class="{ 'hero bg-blue-100 h-screen bg-[url(../assets/img/slide2.jpg)] bg-no-repeat bg-cover bg-[60%_top]': route.name === 'Home', 'bg-slate-800 text-white' : route.name !== 'Home'}">
       <!-- mobile nav -->
       <div class="mobile-nav fixed top-0 transition-transform py-8 px-4 w-2/3 bg-black h-screen z-20 md:w-2/6 lg:hidden"
          :class="{ '-translate-x-full': !appStore.mobileNav, 'translate-x-0': appStore.mobileNav }">
@@ -15,7 +15,7 @@
                </li>
                <li>
                   <NavItem class="block px-3 py-3 transition-colors hover:text-black hover:bg-white"
-                     :isActive="route.name === 'Products' ? true : false" urlPath="Products">Products</NavItem>
+                     :isActive="route.name === 'Shop' ? true : false" urlPath="Shop">Shop</NavItem>
                </li>
             </ul>
          </nav>
@@ -32,25 +32,25 @@
                      <NavItem class="mr-3" :isActive="route.name === 'Home' ? true : false" urlPath="Home">Home</NavItem>
                   </li>
                   <li>
-                     <NavItem class="mr-3" :isActive="route.name === 'Products' ? true : false" urlPath="Products">Products</NavItem>
+                     <NavItem class="mr-3" :isActive="route.name === 'Shop' ? true : false" urlPath="Shop">Shop</NavItem>
                   </li>
                </ul>
                <div class="ml-auto bg-slate-300 p-3 shadow-md">
                   <ul class="flex items-center">
                      <li class="flex items-center">
                         <a href="" class="inline-block pr-3 mr-3 border-slate-900 border-r-2">
-                           <UserIcon class="w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true"></UserIcon>
+                           <UserIcon class="text-slate-900 w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true"></UserIcon>
                         </a>
                      </li>
                      <li class="flex items-center">
                         <a href=""
                            class="inline-block pr-3 mr-3 border-slate-900 border-r-2 lg:border-0 lg:mr-0 lg:pr-0">
-                           <ShoppingBagIcon class="w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true"></ShoppingBagIcon>
+                           <ShoppingBagIcon class="text-slate-900 w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true"></ShoppingBagIcon>
                         </a>
                      </li>
                      <li class="flex items-center">
                         <div href="" id="navToggle" class="inline-block lg:hidden" @click="toggleMobileNav">
-                           <Bars3Icon class="w-5 h-5 lg:w-6 lg:h-6"></Bars3Icon>
+                           <Bars3Icon class="w-5 h-5 lg:w-6 lg:h-6 text-slate-900"></Bars3Icon>
                         </div>
                      </li>
                   </ul>
@@ -58,18 +58,20 @@
             </div>
          </nav>
 
-         <div class="px-8 mt-24 lg:px-24 md:mt-48">
-            <h1 class="w-auto sm:w-[26rem] mb-5 leading-[4rem] font-['Oswald'] text-5xl font-bold uppercase">
-               New Sale on Jacket Up to 70%
-            </h1>
-            <a href=""
-               class="inline-flex items-center p-3 border-2 border-black font-bold text-lg hover:bg-black hover:text-gray-100"><span
-                  class="mr-3">Shop by jacket</span>
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-6 h-6 inline">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-               </svg>
-            </a>
+         <div v-if="route.name === 'Home'" class="flex items-center px-8 h-[60vh] overflow-hidden lg:px-24">
+            <div class="px-8 py-8 bg-white bg-opacity-40">
+               <h1 class="w-auto mb-5 text-4xl font-['Oswald'] font-bold uppercase sm:w-[26rem] lg:leading-[4rem] lg:text-5xl">
+                  New Sale on Jacket Up to 70%
+               </h1>
+               <a href=""
+                  class="inline-flex items-center p-3 border-2 border-black font-bold text-lg hover:bg-black hover:text-gray-100"><span
+                     class="mr-3">Shop by jacket</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                     class="w-6 h-6 inline">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+               </a>
+            </div>
          </div>
       </div>
    </section>
@@ -77,7 +79,7 @@
 
 <script setup>
 import { XMarkIcon, UserIcon, ShoppingBagIcon, Bars3Icon } from '@heroicons/vue/24/outline'
-import NavItem from '@/components/Front/NavItem.vue'
+import NavItem from '@/components/Front/Partial/NavItem.vue'
 import { useRoute } from 'vue-router';
 import { useAppStore } from '@/stores/app';
 

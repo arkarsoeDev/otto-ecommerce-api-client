@@ -1,11 +1,13 @@
 <template>
-   <div>
-      <h1 class="h1 text-red-900">this is home</h1>
-   </div>
+   <ProLayout></ProLayout>
+   <ProductsLayout :products="products"></ProductsLayout>
 </template>
 
-<script>
-   export default {
-      
-   }
+<script setup>
+import ProLayout from '@/components/Front/ProLayout.vue'
+import ProductsLayout from '@/components/Front/ProductsLayout.vue';
+
+const products = [
+   {name: 'glasses', slug: 'glasses', details: 'details',price: '$33.99'}
+]
 </script>
