@@ -4,6 +4,7 @@ import DashboardLayout from "@/views/Layout/DashboardLayout.vue";
 import AuthLayout from "@/views/Layout/AuthLayout.vue";
 import Home from "@/views/Front/Home.vue";
 import Shop from "@/views/Front/Shop.vue";
+import ProductView from "@/views/Front/ProductView.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Dashboard from "@/views/Dashboard/Dashboard.vue";
@@ -28,6 +29,12 @@ const router = createRouter({
                     name: "Shop",
                     component: Shop,
                 },
+                {
+                    path: "/shop/:slug",
+                    props: true,
+                    name: "ProductView",
+                    component: ProductView
+                }
             ],
         },
         {

@@ -31,6 +31,13 @@ export const useShopStore = defineStore("shop", {
                     });
             }
         },
+        fetchProduct(url, slug) {
+            return getAxiosClient()
+                .get(url+`/${slug}`)
+                .then(({ data }) => {
+                    return data;
+                });
+        },
         setActiveCategory(category) {
             this.activeCategory = category;
         },

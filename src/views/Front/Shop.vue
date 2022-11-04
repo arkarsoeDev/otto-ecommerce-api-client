@@ -1,4 +1,9 @@
 <template>
+   <Breadcrumb>
+      <BreadcrumbItem name="Shop" urlName="Shop" aria-current="page">
+         <ChevronLeftIcon class="w-5 h-5 font-semibold"></ChevronLeftIcon>
+      </BreadcrumbItem>
+   </Breadcrumb>
    <section v-if="!loading">
       <div class="container mx-auto px-8 lg:px-24">
          <h1 class="text-3xl font-bold mb-16">Products</h1>
@@ -25,11 +30,13 @@
                         </div>
                         <div class="mb-6 flex items-center justify-between lg:my-0">
                            <span>Price:</span>
-                           <div class="pl-4 py-2 text-gray-500" :class="{'font-bold text-black':shopStore.activeSort && shopStore.activeSort.key.sort === 'low_high'}">
+                           <div class="pl-4 py-2 text-gray-500"
+                              :class="{ 'font-bold text-black': shopStore.activeSort && shopStore.activeSort.key.sort === 'low_high' }">
                               <a href="" @click.prevent="filter({ type: 'sort', key: { sort: 'low_high' } })">Low
                                  to High</a>
                            </div>
-                           <div class="pl-4 py-2 text-gray-500" :class="{ 'font-bold text-black': shopStore.activeSort && shopStore.activeSort.key.sort === 'high_low' }">
+                           <div class="pl-4 py-2 text-gray-500"
+                              :class="{ 'font-bold text-black': shopStore.activeSort && shopStore.activeSort.key.sort === 'high_low' }">
                               <a href="" @click.prevent="filter({ type: 'sort', key: { sort: 'high_low' } })">Hight
                                  to Low</a>
                            </div>
@@ -65,6 +72,9 @@ import { useAppStore } from '@/stores/app';
 import Pagination from '@/components/Front/Pagination.vue';
 import Collapse from '@/components/Front/Collapse.vue';
 import Product from '@/components/Front/Product.vue';
+import Breadcrumb from '@/components/Front/Breadcrumb.vue';
+import BreadcrumbItem from '../../components/Front/Partial/BreadcrumbItem.vue';
+import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 
 const shopStore = useShopStore()
 const appStore = useAppStore()

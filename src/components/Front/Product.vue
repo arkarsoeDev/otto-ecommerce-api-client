@@ -21,15 +21,20 @@
             <p class="text-sm mb-2 line-clamp-2 h-[40px]">
                {{ product.details }}
             </p>
-            <span class="mb-2 font-bold">{{ product.price }}</span>
+            <span class="mb-2 font-bold">{{ formatCurrency(product.price) }}</span>
          </div>
       </div>
-      <a href="/"
+      <router-link :to="{name: 'ProductView', params: {slug: product.slug}}"
          class="block p-2 bg-black text-white border-t border-slate-400 transition hover:bg-white hover:text-black">Product
-         Detail</a>
+         Detail</router-link>
    </div>
 </template>
 
 <script setup>
 const { product } = defineProps(['product'])
+
+const formatCurrency = function (currency) {
+   currency = currency / 100
+   return currency.toLocaleString('en-US', {style:'currency',currency: 'USD'})
+}
 </script>
