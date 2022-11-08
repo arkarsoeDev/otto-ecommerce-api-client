@@ -6,6 +6,8 @@ export const useShopStore = defineStore("shop", {
         products: {},
         activeCategory: null,
         activeSort: null,
+        paymentData: null,
+        paymentMessage: null,
     }),
     actions: {
         fetchCategories() {
@@ -33,7 +35,21 @@ export const useShopStore = defineStore("shop", {
         },
         fetchProduct(url, slug) {
             return getAxiosClient()
-                .get(url+`/${slug}`)
+                .get(url + `/${slug}`)
+                .then(({ data }) => {
+                    return data;
+                });
+        },
+        checkout(payload) {
+            return getAxiosClient()
+                .post("/api/v1/checkout", payload)
+                .then(({ data }) => {
+                    return data;
+                });
+        },
+        payment(payload) {
+            return getAxiosClient()
+                .post("/api/v1/payment", payload)
                 .then(({ data }) => {
                     return data;
                 });
@@ -44,5 +60,11 @@ export const useShopStore = defineStore("shop", {
         setActiveSort(sort) {
             this.activeSort = sort;
         },
+        setPaymentData(payload) {
+            this.paymentData = payload
+        },
+        setPaymentMessage(payload) {
+            this.paymentMessage = payload
+        }
     },
 });

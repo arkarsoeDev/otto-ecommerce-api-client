@@ -2,12 +2,11 @@ import { defineStore } from "pinia";
 
 export const useCartStore = defineStore("cart", {
     state: () => ({
-      cart: {
-          items: []
-        },
-        order: {},
+        cart: sessionStorage.getItem("CART")
+            ? JSON.parse(sessionStorage.getItem("CART"))
+            : { items: [] }
     }),
-    actions: {
+    actions: {  
         addToCart(product) {
             let productInCartIndex = this.cart.items.findIndex(
                 (item) => item.slug === product.slug
@@ -18,26 +17,39 @@ export const useCartStore = defineStore("cart", {
             if (productInCartIndex !== -1) {
                 this.cart.items[productInCartIndex].quantity +=
                     product.quantity;
+                this.setCart();
             } else {
                 this.cart.items.push(product);
+                this.setCart();
             }
         },
         removeFromCart(index) {
-            this.cart.splice(index, 1);
+            this.cart.items.splice(index, 1);
+            this.setCart();
         },
         updateOrder(order) {
             this.order = order;
         },
         clearCart() {
-            this.cart = [];
+            this.cart.items = [];
+            sessionStorage.removeItem("CART");
         },
-   },
-   getters: {
-      getCartQuantity(state) {
-         return state.cart.items.reduce((acc,item) => acc + item.quantity,0)
-      },
-      getCartTotal(state) {
-         return state.cart.items.reduce((acc,item) => acc + (item.price * item.quantity),0)
-      }
-    }
+        setCart() {
+            sessionStorage.setItem("CART", JSON.stringify(this.cart));
+        }
+    },
+    getters: {
+        getCartQuantity(state) {
+            return state.cart.items.reduce(
+                (acc, item) => acc + item.quantity,
+                0
+            );
+        },
+        getCartTotal(state) {
+            return state.cart.items.reduce(
+                (acc, item) => acc + item.price * item.quantity,
+                0
+            );
+        },
+    },
 });

@@ -43,14 +43,14 @@
                         </a>
                      </li>
                      <li class="flex items-center">
-                        <a href=""
+                        <router-link :to="{name: 'CartView'}"
                            class="inline-block relative pr-3 mr-3 border-slate-900 border-r-2 lg:border-0 lg:mr-0 lg:pr-0">
                            <ShoppingBagIcon class="text-slate-900 w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true"></ShoppingBagIcon>
                            <div
                               class="absolute border-gray-700 shadow flex items-center justify-center -top-3 left-4 px-1.5 bg-blue-500 text-white rounded-lg">
                               <span v-if="cartQuantity > 0">{{ cartQuantity }}</span>
                            </div>
-                        </a>
+                        </router-link>
                      </li>
                      <li class="flex items-center">
                         <div href="" id="navToggle" class="inline-block lg:hidden" @click="toggleMobileNav">

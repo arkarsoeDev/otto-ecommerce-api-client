@@ -83,7 +83,6 @@
                                  d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0zm4-2.5A2.5 2.5 0 007.5 5v1h5V5A2.5 2.5 0 0010 2.5zM7.5 10a2.5 2.5 0 005 0V8.75a.75.75 0 011.5 0V10a4 4 0 01-8 0V8.75a.75.75 0 011.5 0V10z"
                                  clip-rule="evenodd" />
                            </svg>
-
                            Add To Cart
                         </div>
                      </a>
@@ -110,36 +109,6 @@
             <h3 class="text-2xl font-bold mb-6">People Also Buy</h3>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:gap-y-0 xl:grid-cols-4">
                <Product v-for="product in peopleAlsoBuy" :product="product"></Product>
-               <!-- item -->
-               <!-- <div class="text-center max-w-xs mx-auto border border-transparent transition hover:border-slate-400">
-                  <div class="flex flex-col bg-white p-3">
-                     <div class="group relative mb-3 h-52 md:h-44 border border-gray-200">
-                        <a href=""
-                           class="absolute top-1 right-1 border border-black rounded-full p-1 z-10 transition-opacity hidden opacity-0 group-hover:block group-hover:opacity-100 hover:text-white hover:bg-slate-600">
-                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                              stroke="currentColor" class="w-6 h-6">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                 d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                           </svg>
-                        </a>
-                        <img src="/img/cat_item01.jpg" class="w-full h-full transition group-hover:blur-sm" alt="" />
-                     </div>
-                     <div>
-                        <a href="" class="block font-semibold mb-3 transition hover:underline underline-offset-4">
-                           Black cool glasses
-                        </a>
-                        <p class="text-sm mb-2">
-                           Lorem ipsum dolor sit amet
-                           consectetur adipisicing elit
-                        </p>
-                        <span class="mb-2 font-bold">$ 39.99</span>
-                     </div>
-                  </div>
-                  <a href=""
-                     class="block p-2 bg-black text-white border-t border-slate-400 transition hover:bg-white hover:text-black">Product
-                     Detail</a>
-               </div> -->
-               <!-- /item -->
             </div>
          </div>
       </section>

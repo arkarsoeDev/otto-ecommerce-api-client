@@ -5,6 +5,9 @@ import AuthLayout from "@/views/Layout/AuthLayout.vue";
 import Home from "@/views/Front/Home.vue";
 import Shop from "@/views/Front/Shop.vue";
 import ProductView from "@/views/Front/ProductView.vue";
+import CartView from "@/views/Front/CartView.vue";
+import Checkout from '@/views/Front/Checkout.vue';
+import Summary from "@/views/Front/Summary.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Dashboard from "@/views/Dashboard/Dashboard.vue";
@@ -33,8 +36,23 @@ const router = createRouter({
                     path: "/shop/:slug",
                     props: true,
                     name: "ProductView",
-                    component: ProductView
-                }
+                    component: ProductView,
+                },
+                {
+                    path: "/cart",
+                    name: "CartView",
+                    component: CartView,
+                },
+                {
+                    path: "/checkout",
+                    name: "Checkout",
+                    component: Checkout,
+                },
+                {
+                    path: "/summary",
+                    name: "Summary",
+                    component: Summary,
+                },
             ],
         },
         {
