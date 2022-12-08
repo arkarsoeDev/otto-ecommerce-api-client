@@ -64,10 +64,11 @@
 <script setup>
 import { LockClosedIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 
 const user = {
@@ -82,8 +83,7 @@ const errMsgs = ref({})
 function register() {
    userStore.register(user)
       .then((res) => {
-         console.log(res)
-         router.push({ name: 'Dashboard' })
+         router.push({ name: route.meta.previousRoute ?? 'Home' })
       }).catch(err => errMsgs.value = err.response.data.errors)
 }
 </script>

@@ -4,9 +4,9 @@ export const useCartStore = defineStore("cart", {
     state: () => ({
         cart: sessionStorage.getItem("CART")
             ? JSON.parse(sessionStorage.getItem("CART"))
-            : { items: [] }
+            : { items: [] },
     }),
-    actions: {  
+    actions: {
         addToCart(product) {
             let productInCartIndex = this.cart.items.findIndex(
                 (item) => item.slug === product.slug
@@ -27,8 +27,11 @@ export const useCartStore = defineStore("cart", {
             this.cart.items.splice(index, 1);
             this.setCart();
         },
-        updateOrder(order) {
-            this.order = order;
+        removeOneFromCart(index) {
+            if (this.cart.items[index].quantity > 1) {
+                this.cart.items[index].quantity--;
+                this.setCart();
+            }
         },
         clearCart() {
             this.cart.items = [];
@@ -36,7 +39,7 @@ export const useCartStore = defineStore("cart", {
         },
         setCart() {
             sessionStorage.setItem("CART", JSON.stringify(this.cart));
-        }
+        },
     },
     getters: {
         getCartQuantity(state) {

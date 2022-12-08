@@ -10,7 +10,7 @@
                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                </svg>
             </a>
-            <img :src="product.photo ? product.photo[0] : ''"
+            <img :src="product.photos[0] ? product.photos[0].url : ''"
                class="object-contain w-full h-full transition group-hover:blur-sm" alt="" />
          </div>
          <div>
@@ -24,7 +24,7 @@
             <span class="mb-2 font-bold">{{ formatCurrency(product.price) }}</span>
          </div>
       </div>
-      <router-link :to="{name: 'ProductView', params: {slug: product.slug}}"
+      <router-link :to="{name: 'ProductView', params: {slug: product.slug}, state: {id: product.id}}"
          class="block p-2 bg-black text-white border-t border-slate-400 transition hover:bg-white hover:text-black">Product
          Detail</router-link>
    </div>

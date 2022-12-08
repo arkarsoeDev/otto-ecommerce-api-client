@@ -11,7 +11,7 @@
             <!-- left -->
             <div class="lg:col-span-3">
                <div class="p-2 border border-gray-400">
-                  <Collapse :categories="categories" @filterCat="filter"></Collapse>
+                  <Collapse :categories="categories" :activeCategory="filterParam.category" @filterCat="filter"></Collapse>
                </div>
             </div>
             <!-- right -->
@@ -21,23 +21,23 @@
                   <!-- filter by -->
                   <div class="sm:col-span-2 md:col-span-3 xl:col-span-4">
                      <div class="flex flex-col lg:flex-row items-center justify-between">
-                        <div class="mb-6 flex items-center justify-between lg:my-0" v-if="shopStore.activeCategory">
+                        <div class="mb-6 flex items-center justify-between lg:my-0" v-if="filterParam.category">
                            <span>FilterBy : </span>
-                           <span class="px-3 py-2 bg-gray-200 ml-3">{{ shopStore.activeCategory.key.category }}</span>
+                           <span class="px-3 py-2 bg-gray-200 ml-3">{{ filterParam.category }}</span>
                         </div>
                         <div class="my-6 lg:my-0" v-else>
                            <h1 class="text-2xl font-bold underline underline-offset-4">Featured Items</h1>
                         </div>
                         <div class="mb-6 flex items-center justify-between lg:my-0">
                            <span>Price:</span>
-                           <div class="pl-4 py-2 text-gray-500"
-                              :class="{ 'font-bold text-black': shopStore.activeSort && shopStore.activeSort.key.sort === 'low_high' }">
-                              <a href="" @click.prevent="filter({ type: 'sort', key: { sort: 'low_high' } })">Low
+                           <div class="pl-4 py-2 text-gray-500 transition-colors hover:text-black"
+                              :class="{ 'font-bold text-black': filterParam.sort === 'low_high' }">
+                              <a href="" @click.prevent="filter({ type: 'sort', key: 'low_high'})">Low
                                  to High</a>
                            </div>
-                           <div class="pl-4 py-2 text-gray-500"
-                              :class="{ 'font-bold text-black': shopStore.activeSort && shopStore.activeSort.key.sort === 'high_low' }">
-                              <a href="" @click.prevent="filter({ type: 'sort', key: { sort: 'high_low' } })">Hight
+                           <div class="pl-4 py-2 text-gray-500 transition-colors hover:text-black"
+                              :class="{ 'font-bold text-black': filterParam.sort === 'high_low' }">
+                              <a href="" @click.prevent="filter({ type: 'sort', key: 'high_low' })">Hight
                                  to Low</a>
                            </div>
                         </div>
@@ -62,7 +62,11 @@
       </div>
 
    </section>
-
+   <template v-if="loading">
+      <div>
+         <p>Loading ...</p>
+      </div>
+   </template>
 </template>
 
 <script setup>
@@ -83,34 +87,29 @@ const categories = ref([])
 const products = ref({})
 const loading = ref(true)
 
-const fetchProducts = async (url) => {
-   products.value = await shopStore.fetchProducts(url)
+const filterParam = ref({
+   category: null,
+   sort: null,
+})
+
+const fetchProducts = async (url=null) => {
+   products.value = await shopStore.fetchProducts({
+      url,
+      category: filterParam.value.category,
+      sort: filterParam.value.sort,
+   })
 }
 
-const filter = async (key) => {
-   let newParams = {
-      ...key.key
-   }
-   if (shopStore.activeCategory && shopStore.activeCategory.type !== key.type) {
-      newParams = { ...newParams, ...shopStore.activeCategory.key }
-   }
-   if (shopStore.activeSort && shopStore.activeSort.type !== key.type) {
-      newParams = { ...newParams, ...shopStore.activeSort.key }
-   }
-   try {
-      products.value = await shopStore.fetchProducts("/api/v1/products", { params: newParams })
-   } finally {
-      if (key.type === 'sort') shopStore.setActiveSort(key)
-      if (key.type === 'category') shopStore.setActiveCategory(key)
-   }
+const filter = async (param) => {
+   filterParam.value[param.type] = param.key
+   fetchProducts();
 }
 
 onMounted(async () => {
    loading.value = true
    try {
       categories.value = await shopStore.fetchCategories();
-      products.value = await shopStore.fetchProducts("/api/v1/products");
-      console.log(products.value)
+      products.value = await shopStore.fetchProducts();
       console.log('get all')
    } finally {
       console.log('loading done')

@@ -20,15 +20,17 @@ export const useUserStore = defineStore("user", {
     actions: {
         register(user) {
             return getAxiosClient(this.user.token)
-                .post("/api/v1/register", user)
+                .post("/register", user)
                 .then(({ data }) => {
                     this.setUser(data);
                     return data;
+                }).catch(err => {
+                    throw err
                 });
         },
         login(user) {
             return getAxiosClient(this.user.token)
-                .post("/api/v1/login", user)
+                .post("/login", user)
                 .then(({ data }) => {
                     this.setUser(data);
                     return data;
@@ -36,7 +38,7 @@ export const useUserStore = defineStore("user", {
         },
         logout() {
             return getAxiosClient(this.user.token)
-                .post("/api/v1/logout")
+                .post("/logout")
                 .then(({ data }) => {
                     (this.user.data = {}), (this.user.token = null);
                     sessionStorage.removeItem("TOKEN");

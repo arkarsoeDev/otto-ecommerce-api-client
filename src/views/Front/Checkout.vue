@@ -37,7 +37,7 @@
                <h1 class="text-2xl font-bold mb-8">Your Order</h1>
                <div v-for="(item, index) in paymentData.items" :key="index" class="mb-8">
                   <div class="flex gap-x-4 pb-3 border-b mb-3">
-                     <img :src="item.photo[0] ?? ''" class="w-20 h-20" alt="">
+                     <img :src="item.photos[0] ? item.photos[0].url:  ''" class="w-20 h-20" alt="">
                      <div class="font-semibold">
                         <div>{{ item.name }}</div>
                         <div class="text-green-700">{{ formatCurrency(item.price) }}</div>
@@ -142,6 +142,7 @@ const createStripeToken = () => {
 }  
 
 const handleSubmit = async () => {
+   console.log('click')
    const stoken = await createStripeToken()
    shopStore.payment({
       ...billing.value,
@@ -150,10 +151,12 @@ const handleSubmit = async () => {
    })
       .then(res => {
          if (res.success) {
+            cartStore.clearCart();
             console.log(res.success_message)
             shopStore.setPaymentMessage(res.success_message)
             router.push({ name: 'Summary'})
          }
+         console.log(res)
       })
       .catch(err => console.log(err))
 }

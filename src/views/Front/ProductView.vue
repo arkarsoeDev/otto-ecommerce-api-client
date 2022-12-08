@@ -14,10 +14,11 @@
                <!-- left image -->
                <div class="xl:col-span-5">
                   <div class="h-60 sm:h-80 md:h-96 xl:h-[27rem] mb-6">
-                     <img src="/img/cat_item01.jpg" class="main-image w-full h-full" alt="">
+                     <img :src="product.photos[0] ? product.photos[0].url : ''" class="main-image w-full h-full object-cover" alt="">
                   </div>
 
-                  <div class="grid grid-cols-4 w-full gap-x-4">
+                  <!-- image loop -->
+                  <!-- <div class="grid grid-cols-4 w-full gap-x-4">
                      <div
                         class="h-16 border border-transparent transition-colors sm:h-28 md:h-32 xl:h-20 hover:border-black  hover:cursor-pointer">
                         <img src="/img/architecture-g7d4b59699_1920.jpg" class="side-image w-full h-full" alt="">
@@ -35,7 +36,7 @@
                         <img src="/img/architecture-g7d4b59699_1920.jpg" class="side-image w-full h-full" alt="">
                      </div>
 
-                  </div>
+                  </div> -->
                </div>
 
                <!-- right section -->
@@ -148,9 +149,11 @@ watch(() => props.slug, (news, olds) => {
 const fetchProduct = async () => {
    try {
       loading.value = true
-      const productRes = await shopStore.fetchProduct('api/v1/products', props.slug)
+      const productRes = await shopStore.fetchProduct(props.slug)
       product.value = productRes.data
       peopleAlsoBuy.value = productRes.peopleAlsoBuy
+   } catch (err) {
+      loading.value = false
    } finally {
       loading.value = false
    }

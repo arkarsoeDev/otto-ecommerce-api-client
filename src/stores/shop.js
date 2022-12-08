@@ -12,47 +12,56 @@ export const useShopStore = defineStore("shop", {
     actions: {
         fetchCategories() {
             return getAxiosClient()
-                .get("/api/v1/categories")
+                .get("/categories")
                 .then(({ data }) => {
                     return data;
                 });
         },
-        fetchProducts(url, params) {
-            if (params) {
-                return getAxiosClient()
-                    .get(url, params)
-                    .then(({ data }) => {
-                        console.log(data);
-                        return data;
-                    });
-            } else {
-                return getAxiosClient()
-                    .get(url)
-                    .then(({ data }) => {
-                        return data;
-                    });
-            }
-        },
-        fetchProduct(url, slug) {
+        fetchProducts({
+            url = null,
+            category,
+            sort,
+        } = {}) {
+            url = url ?? "/products";
             return getAxiosClient()
-                .get(url + `/${slug}`)
+                .get(url, {
+                    params: {
+                        category,
+                        sort,
+                    },
+                })
+                .then(({ data }) => {
+                    return data
+                });
+        },
+        fetchProduct(slug) {
+            return getAxiosClient()
+                .get('/products/'+slug)
                 .then(({ data }) => {
                     return data;
-                });
+                })
+                .catch(err => {
+                    throw err
+                })
+                ;
         },
         checkout(payload) {
             return getAxiosClient()
-                .post("/api/v1/checkout", payload)
+                .post("/checkout", payload)
                 .then(({ data }) => {
                     return data;
                 });
         },
         payment(payload) {
             return getAxiosClient()
-                .post("/api/v1/payment", payload)
+                .post("/payment", payload)
                 .then(({ data }) => {
                     return data;
-                });
+                })
+                .catch(err => {
+                    throw err
+                })
+                ;
         },
         setActiveCategory(category) {
             this.activeCategory = category;

@@ -46,9 +46,13 @@
 <script setup>
 import { LockClosedIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore();
+const route = useRoute()
+const router = useRouter()
+console.log(route)
 
 const user = {
    email: '',
@@ -60,7 +64,7 @@ const errMsg = ref('')
 function login() {
    userStore.login(user)
       .then((data) => {
-         console.log(data)
+         router.push({ name: route.meta.previousRoute ?? 'Home'})
       }).catch(err => errMsg.value = err.response.data)
 }
 </script>

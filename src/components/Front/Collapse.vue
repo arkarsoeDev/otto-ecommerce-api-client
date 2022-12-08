@@ -11,7 +11,7 @@
       <div class="collapse-menu select-none overflow-hidden h-0 transition-[height] ease-in-out" data-target="category">
          <div>
             <div v-for="(category, index) in categories" :key="index" class="pl-5 py-2 text-gray-500">
-               <a href="#" @click.prevent="filterCat({type:'category',key:{category:category.slug}})" class="hover:text-black" :class="{'text-black font-bold': shopStore.activeCategory && category.slug === shopStore.activeCategory.key.category}">{{ category.title }}</a>
+               <a href="#" @click.prevent="filterCat({type:'category', key: category.slug})" class="hover:text-black" :class="{'text-black font-bold': category.slug === activeCategory}">{{ category.name }}</a>
             </div>
          </div>
       </div>
@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { useShopStore } from '@/stores/shop';
 
 const toggleCollapse = function (event, target) {
    let collapseMenu = document.querySelector(
@@ -33,9 +32,15 @@ const toggleCollapse = function (event, target) {
    collapseMenu.classList.toggle("h-0");
 }
 
-const { categories } = defineProps(['categories'])
+const { categories, activeCategory } = defineProps({
+   categories: {
+      required: true,
+   },
+   activeCategory: {
+      default: '',
+   }
+})
 const emit = defineEmits(['filterCat'])
-const shopStore = useShopStore();
 
 const filterCat = function (category) {
    emit('filterCat',category)

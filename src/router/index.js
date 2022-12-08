@@ -56,24 +56,15 @@ const router = createRouter({
             ],
         },
         {
-            path: "/dashboard",
-            name: "DashboardLayout",
-            component: DashboardLayout,
-            meta: { requiresAuth: true },
-            children: [
-                {
-                    path: "/dashboard",
-                    name: "Dashboard",
-                    component: Dashboard,
-                },
-            ],
-        },
-        {
             path: "/auth",
             redirect: "/login",
             name: "Auth",
             component: AuthLayout,
             meta: { isGuest: true },
+            beforeEnter: (to, from, next) => {
+                to.meta.previousRoute = from.name
+                next();
+            },
             children: [
                 {
                     path: "/login",
