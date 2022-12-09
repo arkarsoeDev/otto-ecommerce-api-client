@@ -6,12 +6,24 @@
    </Breadcrumb>
    <section v-if="!loading">
       <div class="container mx-auto px-8 lg:px-24">
-         <h1 class="text-3xl font-bold mb-16">Products</h1>
+         <div class="flex items-start justify-between flex-col mb-9 sm:mb-16 sm:flex-row sm:items-center">
+            <h1 class="text-3xl font-bold mb-6 sm:mb-0">Products</h1>
+            <form @submit.prevent="fetchProducts" class="w-full sm:w-auto">
+               <div class="flex items-center">
+                  <input type="text" class="grow  h-[45px] form-input px-3 py-1 mr-2 sm:grow-0" v-model="filterParam.search"
+                     placeholder="search">
+                  <button type="submit" class="p-1 border border-gray-800 h-[45px]">
+                     <MagnifyingGlassIcon class="w-7 h-5"></MagnifyingGlassIcon>
+                  </button>
+               </div>
+            </form>
+         </div>
          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- left -->
             <div class="lg:col-span-3">
                <div class="p-2 border border-gray-400">
-                  <Collapse :categories="categories" :activeCategory="filterParam.category" @filterCat="filter"></Collapse>
+                  <Collapse :categories="categories" :activeCategory="filterParam.category" @filterCat="filter">
+                  </Collapse>
                </div>
             </div>
             <!-- right -->
@@ -32,7 +44,7 @@
                            <span>Price:</span>
                            <div class="pl-4 py-2 text-gray-500 transition-colors hover:text-black"
                               :class="{ 'font-bold text-black': filterParam.sort === 'low_high' }">
-                              <a href="" @click.prevent="filter({ type: 'sort', key: 'low_high'})">Low
+                              <a href="" @click.prevent="filter({ type: 'sort', key: 'low_high' })">Low
                                  to High</a>
                            </div>
                            <div class="pl-4 py-2 text-gray-500 transition-colors hover:text-black"
@@ -78,7 +90,7 @@ import Collapse from '@/components/Front/Collapse.vue';
 import Product from '@/components/Front/Product.vue';
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '../../components/Front/Partial/BreadcrumbItem.vue';
-import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
+import { ChevronLeftIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 
 const shopStore = useShopStore()
 const appStore = useAppStore()
@@ -88,16 +100,20 @@ const products = ref({})
 const loading = ref(true)
 
 const filterParam = ref({
+   search: '',
    category: null,
    sort: null,
 })
 
-const fetchProducts = async (url=null) => {
+const fetchProducts = async (event, url = null) => {
+   loading.value = true
    products.value = await shopStore.fetchProducts({
-      url,
+      url: url,
+      search: filterParam.value.search,
       category: filterParam.value.category,
       sort: filterParam.value.sort,
    })
+   loading.value = false
 }
 
 const filter = async (param) => {

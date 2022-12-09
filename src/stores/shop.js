@@ -19,13 +19,16 @@ export const useShopStore = defineStore("shop", {
         },
         fetchProducts({
             url = null,
+            search,
             category,
             sort,
         } = {}) {
             url = url ?? "/products";
+            console.log(url)
             return getAxiosClient()
                 .get(url, {
                     params: {
+                        search,
                         category,
                         sort,
                     },
