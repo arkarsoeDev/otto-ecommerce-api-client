@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from "@/views/Layout/DefaultLayout.vue";
-import DashboardLayout from "@/views/Layout/DashboardLayout.vue";
 import AuthLayout from "@/views/Layout/AuthLayout.vue";
 import Home from "@/views/Front/Home.vue";
 import Shop from "@/views/Front/Shop.vue";
@@ -10,7 +9,8 @@ import Checkout from '@/views/Front/Checkout.vue';
 import Summary from "@/views/Front/Summary.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
-import Dashboard from "@/views/Dashboard/Dashboard.vue";
+import Orders from "@/views/Front/Orders.vue";
+import Order from "@/views/Front/Order.vue";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "../stores/app";
 
@@ -53,6 +53,17 @@ const router = createRouter({
                     name: "Summary",
                     component: Summary,
                 },
+                {
+                    path: "/orders",
+                    name: "Orders",
+                    component: Orders,
+                },
+                {
+                    path: "/orders/:id",
+                    name: "Order",
+                    component: Order,
+                    props: true,
+                },
             ],
         },
         {
@@ -62,7 +73,7 @@ const router = createRouter({
             component: AuthLayout,
             meta: { isGuest: true },
             beforeEnter: (to, from, next) => {
-                to.meta.previousRoute = from.name
+                to.meta.previousRoute = from.name;
                 next();
             },
             children: [
