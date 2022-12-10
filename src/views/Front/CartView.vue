@@ -131,9 +131,11 @@ import { useShopStore } from '@/stores/shop'
 import { formatCurrency } from "@/helpers"
 import { useRouter } from 'vue-router';
 import { PlusIcon, MinusIcon, TrashIcon, PencilIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
+import { useAppStore } from '@/stores/app';
 
 const cartStore = useCartStore();
 const shopStore = useShopStore();
+const appStore = useAppStore();
 const router = useRouter();
 
 const checkout = function () {
@@ -143,12 +145,22 @@ const checkout = function () {
    })
    shopStore.checkout({ items: JSON.stringify(items) })
       .then(res => {
+         console.log(res)
          if (res.success) {
+            console.log(res.data)
             shopStore.setPaymentData(res.data)
             router.push({ name: 'Checkout' })
          }
       })
-      .catch(err => console.log(err.response))
+      .catch(err => {
+         console.log(err)
+         if (err.response.status === 400) {
+            appStore.addMessage({
+               type: 'error',
+               content: err.response.data.message
+            })
+         }
+      })
 }
 
 const addToCart = function (item) {
