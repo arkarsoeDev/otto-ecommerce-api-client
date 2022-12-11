@@ -14,10 +14,10 @@
                class="object-contain w-full h-full transition group-hover:blur-sm" alt="" />
          </div>
          <div>
-            <a href=""
+            <router-link :to="{name: 'ProductView', params: {slug: product.slug}, state: {id: product.id}}"
                class="block font-semibold mb-3 transition hover:underline underline-offset-4">
                {{ product.name }}
-            </a>
+            </router-link>
             <p class="text-sm mb-2 line-clamp-2 h-[40px]">
                {{ product.details }}
             </p>

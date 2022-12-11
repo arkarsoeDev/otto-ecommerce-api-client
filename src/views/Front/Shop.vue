@@ -4,21 +4,21 @@
          <ChevronLeftIcon class="w-5 h-5 font-semibold"></ChevronLeftIcon>
       </BreadcrumbItem>
    </Breadcrumb>
-   <section v-if="!loading">
+   <section v-if="!loading && products.data">
       <div class="container mx-auto px-8 lg:px-24">
          <div class="flex items-start justify-between flex-col mb-9 sm:mb-16 sm:flex-row sm:items-center">
             <h1 class="text-3xl font-bold mb-6 sm:mb-0">Products</h1>
             <form @submit.prevent="fetchProducts(null)" class="w-full sm:w-auto">
                <div class="flex items-center">
-                  <input type="text" class="grow  h-[45px] form-input px-3 py-1 mr-2 sm:grow-0" v-model="filterParam.search"
-                     placeholder="search">
+                  <input type="text" class="grow  h-[45px] form-input px-3 py-1 mr-2 sm:grow-0"
+                     v-model="filterParam.search" placeholder="search">
                   <button type="submit" class="p-1 border border-gray-800 h-[45px]">
                      <MagnifyingGlassIcon class="w-7 h-5"></MagnifyingGlassIcon>
                   </button>
                </div>
             </form>
          </div>
-         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-9">
             <!-- left -->
             <div class="lg:col-span-3">
                <div class="p-2 border border-gray-400">
@@ -55,24 +55,31 @@
                         </div>
                      </div>
                   </div>
-
-                  <Product v-for="product in products.data" :product="product"></Product>
-
-                  <div class="sm:col-span-2 md:col-span-3 xl:col-span-4">
-                     <hr class="mt-6" />
-                     <div class="text-center my-8">
-                        <!-- pagination -->
-                        <Pagination v-if="appStore.mobile && products.links" :mobile="appStore.mobile"
-                           :links="products.links" @fetchLink="fetchProducts"></Pagination>
-                        <Pagination v-if="products.meta && !appStore.mobile" :mobile="appStore.mobile"
-                           :links="products.meta.links" @fetchLink="fetchProducts"></Pagination>
+                  <template v-if="products.data.length > 0">
+                     <Product v-for="product in products.data" :product="product"></Product>
+                  </template>
+                  <template v-else>
+                     <div class="flex items-center justify-center min-h-[200px] sm:col-span-2 md:col-span-3 xl:col-span-4">
+                        <h1 class="font-bold text-xl">No product available!</h1>
                      </div>
-                  </div>
+                  </template>
+
+                  <template v-if="products.meta.last_page > 1">
+                     <div class="sm:col-span-2 md:col-span-3 xl:col-span-4">
+                        <hr class="mt-6" />
+                        <div class="text-center my-8">
+                           <!-- pagination -->
+                           <Pagination v-if="appStore.mobile && products.links" :mobile="appStore.mobile" :links="products.links"
+                              @fetchLink="fetchProducts"></Pagination>
+                           <Pagination v-if="products.meta && !appStore.mobile" :mobile="appStore.mobile" :links="products.meta.links"
+                              @fetchLink="fetchProducts"></Pagination>
+                        </div>
+                     </div>
+                  </template>
                </div>
             </div>
          </div>
       </div>
-
    </section>
    <template v-if="loading">
       <div>
@@ -106,6 +113,7 @@ const filterParam = ref({
 })
 
 const fetchProducts = async (url = null) => {
+   loading.value = true
    try {
       products.value = await shopStore.fetchProducts({
          url: url,
@@ -115,13 +123,13 @@ const fetchProducts = async (url = null) => {
       })
    } catch (error) {
       console.log(error)
-   } 
+   }
    finally {
       loading.value = false
    }
 }
 
-const fetchCategories =async function () {
+const fetchCategories = async function () {
    try {
       categories.value = await shopStore.fetchCategories();
    } catch (error) {
