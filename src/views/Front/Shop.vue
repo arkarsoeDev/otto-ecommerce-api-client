@@ -8,7 +8,7 @@
       <div class="container mx-auto px-8 lg:px-24">
          <div class="flex items-start justify-between flex-col mb-9 sm:mb-16 sm:flex-row sm:items-center">
             <h1 class="text-3xl font-bold mb-6 sm:mb-0">Products</h1>
-            <form @submit.prevent="fetchProducts" class="w-full sm:w-auto">
+            <form @submit.prevent="fetchProducts(null)" class="w-full sm:w-auto">
                <div class="flex items-center">
                   <input type="text" class="grow  h-[45px] form-input px-3 py-1 mr-2 sm:grow-0" v-model="filterParam.search"
                      placeholder="search">
@@ -105,15 +105,30 @@ const filterParam = ref({
    sort: null,
 })
 
-const fetchProducts = async (event, url = null) => {
-   loading.value = true
-   products.value = await shopStore.fetchProducts({
-      url: url,
-      search: filterParam.value.search,
-      category: filterParam.value.category,
-      sort: filterParam.value.sort,
-   })
-   loading.value = false
+const fetchProducts = async (url = null) => {
+   try {
+      products.value = await shopStore.fetchProducts({
+         url: url,
+         search: filterParam.value.search,
+         category: filterParam.value.category,
+         sort: filterParam.value.sort,
+      })
+   } catch (error) {
+      console.log(error)
+   } 
+   finally {
+      loading.value = false
+   }
+}
+
+const fetchCategories =async function () {
+   try {
+      categories.value = await shopStore.fetchCategories();
+   } catch (error) {
+      console.log(error)
+   } finally {
+      loading.value = false
+   }
 }
 
 const filter = async (param) => {
@@ -121,16 +136,9 @@ const filter = async (param) => {
    fetchProducts();
 }
 
-onMounted(async () => {
-   loading.value = true
-   try {
-      categories.value = await shopStore.fetchCategories();
-      products.value = await shopStore.fetchProducts();
-      console.log('get all')
-   } finally {
-      console.log('loading done')
-      loading.value = false
-   }
+onMounted(() => {
+   fetchCategories()
+   fetchProducts()
 })
 
 </script>

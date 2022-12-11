@@ -44,11 +44,12 @@
                   <div class="sm:mb-6 sm:flex sm:items-center sm:justify-between">
                      <h1 class="font-bold mb-3 text-3xl sm:mb-0">{{ product.name }}</h1>
                      <div class="hidden sm:block">
-                        <span class="mr-3">Availability:</span><span class="p-1 px-2 bg-green-400">In Stock</span>
-                     </div>
+                        <span class="mr-3">Availability:</span><span class="p-1 px-2" :class="product.stock > 0 ? 'bg-green-400' : 'bg-red-400'">{{ product.stock
+                           > 0 ? 'In stock' : 'Out of stock' }}</span>
+                     </div>   
                   </div>
                   <div class="mb-3 sm:hidden">
-                     <span class="mr-3">Availability:</span><span class="p-1 px-2 bg-green-400">In Stock</span>
+                     <span class="mr-3">Availability:</span><span class="p-1 px-2" :class="product.stock > 0 ? 'bg-green-400': 'bg-red-400'">{{ product.stock > 0 ? 'In stock' : 'Out of stock' }}</span>
                   </div>
                   <div class="mb-6">
                      <span class="text-green-700 font-bold text-3xl">${{ product.price }}</span>
@@ -58,25 +59,24 @@
                   <div class="flex flex-col items-start select-none sm:flex-row">
                      <div class="flex items-center mb-6">
                         <span class="mr-3">Qty:</span>
-                        <input type="number" id="qty"
-                           class="text-center border-2 border-gray-300 w-12 h-14 mr-3" v-model="quantity" @focusout="quantity ? quantity : quantity = 1">
+                        <input :disabled="product.stock <= 0" type="number" id="qty"
+                           class="text-center border-2 border-gray-300 w-12 h-14 mr-3 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-300"   v-model="quantity" @focusout="quantity && quantity <= stock ? quantity : quantity = 0">
                         <div class="inline-flex flex-col justify-between h-14 sm:mr-6">
-                           <div @click="quantity++" id="qtyPlus" class="border-2 border-black inline hover:cursor-pointer">
+                           <button :disabled="product.stock <= quantity" @click="quantity++" id="qtyPlus" class="border-2 border-black inline hover:cursor-pointer disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400">
                            <svg xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                  <path
                                     d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" />
                            </svg>
-
-                           </div>
-                           <div @click="quantity > 1 ? quantity-- : ''" id="qtyMinus" class="border-2 border-black inline hover:cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg"
+                           </button>
+                           <button :disabled="quantity <= 0" @click="quantity > 0 ? quantity-- : ''" id="qtyMinus" class="border-2 border-black inline hover:cursor-pointer disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400"><svg xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                  <path d="M6.75 9.25a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" />
-                              </svg></div>
+                              </svg></button>
                         </div>
                      </div>
-                     <a href="" @click.prevent="addToCart({...product})"
-                        class="h-14 p-3 w-full text-lg font-semibold bg-black text-white transition-colors border border-transparent sm:w-auto hover:bg-white hover:text-black hover:border-black">
+                     <button :disabled="quantity == 0" @click.prevent="addToCart({...product})"
+                        class="h-14 p-3 w-full text-lg font-semibold bg-black text-white transition-colors border border-transparent sm:w-auto hover:bg-white hover:text-black hover:border-black disabled:cursor-not-allowed disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-300 disabled:border-gray-200">
                         <div class="flex items-center justify-center">
                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                               class="w-5 h-5 mr-3">
@@ -86,7 +86,7 @@
                            </svg>
                            Add To Cart
                         </div>
-                     </a>
+                     </button>
                   </div>
                   <hr class="my-6 border-gray-400">
                   <div 
@@ -127,22 +127,19 @@ import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import { useCartStore } from '@/stores/cart';
+import { useAppStore } from '@/stores/app';
 
 const shopStore = useShopStore()
 const cartStore = useCartStore()
+const appStore = useAppStore()
 const props = defineProps(['slug'])
 
 const product = ref({})
 const peopleAlsoBuy = ref([])
 const loading = ref(true)
-const quantity = ref(1)
-
-onMounted(async () => {
-   fetchProduct()
-})
+const quantity = ref(0)
 
 watch(() => props.slug, (news, olds) => {
-   quantity.value = 1   
    fetchProduct()
 })
 
@@ -153,15 +150,24 @@ const fetchProduct = async () => {
       product.value = productRes.data
       peopleAlsoBuy.value = productRes.peopleAlsoBuy
    } catch (err) {
-      loading.value = false
+      loading.value = false   
    } finally {
       loading.value = false
+      quantity.value = product.value.stock > 0 ? 1 : 0
    }
 }
 
 const addToCart = function (paraProduct) {
    paraProduct.quantity = quantity.value
    cartStore.addToCart(paraProduct)
+   appStore.addMessage({
+      type: 'success',
+      content: paraProduct.name + " is added to Cart"
+   })
 }
+
+onMounted(() => {
+   fetchProduct()
+})
 
 </script>

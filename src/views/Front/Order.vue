@@ -76,7 +76,11 @@ const loading = ref(true)
 
 const order = ref({})
 
-onMounted(async () => {
+onMounted(() => {
+   fetchOrder()
+})
+
+const fetchOrder = async function () {
    try {
       const data = await orderStore.fetchOrder(props.id)
       order.value = data.data
@@ -85,5 +89,5 @@ onMounted(async () => {
    } finally {
       loading.value = false
    }
-})
+}
 </script>

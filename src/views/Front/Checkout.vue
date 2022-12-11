@@ -32,12 +32,11 @@
                </div>
             </div>
 
-
             <div class="md:col-span-5 lg:col-span-4">
                <h1 class="text-2xl font-bold mb-8">Your Order</h1>
                <div v-for="(item, index) in paymentData.items" :key="index" class="mb-8">
                   <div class="flex gap-x-4 pb-3 border-b mb-3">
-                     <img :src="item.photos[0] ? item.photos[0].url:  ''" class="w-20 h-20" alt="">
+                     <img :src="item.photos[0] ? item.photos[0].url : ''" class="w-20 h-20" alt="">
                      <div class="font-semibold">
                         <div>{{ item.name }}</div>
                         <div class="text-green-700">{{ formatCurrency(item.price) }}</div>
@@ -55,13 +54,20 @@
                      <span class="font-bold text-green-700">{{ formatCurrency(paymentData.total) }}</span>
                   </div>
                </div>
-               <button type="submit" form="BillingForm"
-                  class="block w-full px-3 py-2 text-lg font-semibold bg-black text-white transition-colors border border-transparent hover:bg-white hover:text-black hover:border-black">
-                  <div class="flex items-center justify-center">
-                     Place Order
-                     <ChevronRightIcon class="ml-3 w-5 h-5"></ChevronRightIcon>
-                  </div>
-               </button>
+               <div class="relative block">
+                  <button type="submit" form="BillingForm" :disabled="submitting" href="/checkout"
+                     class="block w-full p-3 text-lg font-semibold bg-black text-white transition-colors border border-transparent hover:bg-white hover:text-black hover:border-black disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-70">
+                     <div class="flex items-center justify-center">
+                        <span class="mr-3">Place Order</span>
+                        <ChevronRightIcon class="w-5 h-5 font-bold"></ChevronRightIcon>
+                     </div>
+                  </button>
+                  <template v-if="submitting">
+                     <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                        <Loading class="text-gray-900 w-6 h-6"></Loading>
+                     </div>
+                  </template>
+               </div>
             </div>
          </div>
       </div>
@@ -82,6 +88,9 @@ import { formatCurrency } from '@/helpers'
 import { useRouter } from 'vue-router';
 import { ChevronRightIcon } from '@heroicons/vue/24/outline';
 import { loadStripe } from '@stripe/stripe-js'
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+import Loading from '@/components/Front/Loading.vue';
 
 const cartStore = useCartStore();
 const shopStore = useShopStore();
@@ -98,6 +107,7 @@ const billing = ref({
 
 const now = new Date(Date.now()).toDateString()
 const paymentData = ref(null)
+const submitting = ref(false)
 let paymentElement = null
 const stripe = ref(null)
 
@@ -112,6 +122,7 @@ onMounted(async () => {
    }
    paymentData.value = shopStore.paymentData;
    try {
+      NProgress.start()
       stripe.value = await loadStripe(paymentData.value.publicKey)
       const elements = stripe.value.elements({
          clientSecret: paymentData.value.clientSecret
@@ -128,6 +139,8 @@ onMounted(async () => {
       paymentElement.mount('#card-input');
    } catch (e) {
       console.log(e)
+   } finally {
+      NProgress.done()
    }
 })
 
@@ -139,26 +152,33 @@ const createStripeToken = () => {
          return result.token.id;
       }
    })
-}  
+}
 
 const handleSubmit = async () => {
-   console.log('click')
-   const stoken = await createStripeToken()
-   shopStore.payment({
-      ...billing.value,
-      pi: paymentData.value.paymentIntentId,
-      stoken: stoken
-   })
-      .then(res => {
-         if (res.success) {
-            cartStore.clearCart();
-            console.log(res.success_message)
-            shopStore.setPaymentMessage(res.success_message)
-            router.push({ name: 'Summary'})
-         }
-         console.log(res)
+   submitting.value = true
+   try {
+      NProgress.start()
+      const stoken = await createStripeToken()
+      const res = await shopStore.payment({
+         ...billing.value,
+         pi: paymentData.value.paymentIntentId,
+         stoken: stoken
       })
-      .catch(err => console.log(err))
+      if (res.success) {
+         cartStore.clearCart();
+         console.log(res.success_message)
+         shopStore.setPaymentMessage(res.success_message)
+         NProgress.done()
+         router.push({ name: 'Summary' })
+      }
+      console.log(res)
+   } catch (error) {
+      console.log(error)
+   }
+   finally {
+      NProgress.done()
+      submitting.value = false
+   }
 }
 
 </script>

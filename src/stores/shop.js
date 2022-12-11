@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { getAxiosClient } from "../data/axios";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 export const useShopStore = defineStore("shop", {
     state: () => ({
@@ -11,11 +13,17 @@ export const useShopStore = defineStore("shop", {
     }),
     actions: {
         fetchCategories() {
+            NProgress.start()
             return getAxiosClient()
                 .get("/categories")
                 .then(({ data }) => {
+                    NProgress.done()
                     return data;
-                });
+                })
+                .catch(error => {
+                    NProgress.done()
+                throw error
+            })
         },
         fetchProducts({
             url = null,
@@ -23,8 +31,8 @@ export const useShopStore = defineStore("shop", {
             category,
             sort,
         } = {}) {
+            NProgress.start()
             url = url ?? "/products";
-            console.log(url)
             return getAxiosClient()
                 .get(url, {
                     params: {
@@ -34,26 +42,36 @@ export const useShopStore = defineStore("shop", {
                     },
                 })
                 .then(({ data }) => {
+                    NProgress.done()
                     return data
-                });
+                })
+                .catch(error => {
+                    NProgress.done()
+                    throw error
+                })
         },
         fetchProduct(slug) {
+            NProgress.start()
             return getAxiosClient()
                 .get('/products/'+slug)
                 .then(({ data }) => {
+                    NProgress.done();
                     return data;
                 })
-                .catch(err => {
-                    throw err
+                .catch(error => {
+                    NProgress.done();
+                    throw error
                 })
-                ;
         },
         checkout(payload) {
             return getAxiosClient()
                 .post("/checkout", payload)
                 .then(({ data }) => {
                     return data;
-                });
+                })
+                .catch((error) => {
+                    throw error
+                })
         },
         payment(payload) {
             return getAxiosClient()

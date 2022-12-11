@@ -55,8 +55,8 @@
                                  <router-link :to="{
                                     name: 'ProductView', params: { slug: item.slug }
                                  }"
-                                    class="text-gray-100 bg-green-600 inline-block border border-transparent p-2 transition-colors hover:text-green-600 hover:bg-white hover:border-green-600">
-                                    <PencilIcon class="w-5 h-5"></PencilIcon>
+                                    class="text-gray-100 bg-sky-600 inline-block border border-transparent p-2 transition-colors hover:text-green-600 hover:bg-white hover:border-green-600">
+                                    <EyeIcon class="w-5 h-5"></EyeIcon>
                                  </router-link>
                                  <a href="" @click.prevent="cartStore.removeFromCart(index)"
                                     class="text-gray-100 bg-red-600 inline-block p-2 border border-transparent transition-colors hover:text-red-600 hover:bg-white hover:border-red-600">
@@ -102,13 +102,20 @@
             </div>
             <hr class="my-6">
             <div class="text-center md:text-right">
-               <a href="/checkout" @click.prevent="checkout"
-                  class="inline-block p-3 text-lg font-semibold bg-black text-white transition-colors border border-transparent sm:w-auto hover:bg-white hover:text-black hover:border-black">
-                  <div class="flex items-center justify-center">
-                     Proceed to Checkout
-                     <ChevronRightIcon class="w-5 h-5"></ChevronRightIcon>
-                  </div>
-               </a>
+               <div class="relative inline-block">
+                  <button :disabled="submitting" href="/checkout" @click.prevent="checkout"
+                     class="p-3 text-lg font-semibold bg-black text-white transition-colors border border-transparent sm:w-auto hover:bg-white hover:text-black hover:border-black disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-70">
+                     <div class="flex items-center justify-center">
+                        <span class="mr-3">Proceed to Checkout</span>
+                        <ChevronRightIcon class="w-5 h-5 font-bold"></ChevronRightIcon>
+                     </div>
+                  </button>
+                  <template v-if="submitting">
+                     <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                        <Loading class="text-gray-900 w-6 h-6"></Loading>
+                     </div>
+                  </template>
+               </div>
             </div>
          </div>
       </section>
@@ -126,41 +133,58 @@
 <script setup>
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
+import Loading from '@/components/Front/Loading.vue';
 import { useCartStore } from '@/stores/cart'
 import { useShopStore } from '@/stores/shop'
 import { formatCurrency } from "@/helpers"
 import { useRouter } from 'vue-router';
-import { PlusIcon, MinusIcon, TrashIcon, PencilIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
+import { PlusIcon, MinusIcon, TrashIcon, ChevronLeftIcon, ChevronRightIcon, EyeIcon } from '@heroicons/vue/20/solid';
 import { useAppStore } from '@/stores/app';
+import { ref } from 'vue';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const cartStore = useCartStore();
 const shopStore = useShopStore();
 const appStore = useAppStore();
 const router = useRouter();
 
-const checkout = function () {
-   const items = [];
-   cartStore.cart.items.map((item) => {
-      items.push({ slug: item.slug, quantity: item.quantity })
-   })
-   shopStore.checkout({ items: JSON.stringify(items) })
-      .then(res => {
-         console.log(res)
+const submitting = ref(false)
+
+const checkout = async function () {
+   NProgress.start()
+   if (window.navigator.onLine) {
+      submitting.value = true
+      const items = [];
+      cartStore.cart.items.map((item) => {
+         items.push({ slug: item.slug, quantity: item.quantity })
+      })
+      try {
+         const res = await shopStore.checkout({ items: JSON.stringify(items) })
          if (res.success) {
             console.log(res.data)
             shopStore.setPaymentData(res.data)
             router.push({ name: 'Checkout' })
          }
-      })
-      .catch(err => {
-         console.log(err)
+      } catch (error) {
          if (err.response.status === 400) {
             appStore.addMessage({
                type: 'error',
                content: err.response.data.message
             })
          }
+      }
+      finally {
+         NProgress.done()
+         submitting.value = false
+      }
+   } else {
+      appStore.addMessage({
+         type: 'error',
+         content: 'No Internet Connection!'
       })
+      NProgress.done()
+   }
 }
 
 const addToCart = function (item) {
