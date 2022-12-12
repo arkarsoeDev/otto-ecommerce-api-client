@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { getAxiosClient } from "../data/axios";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -19,30 +21,46 @@ export const useUserStore = defineStore("user", {
     }),
     actions: {
         register(user) {
+            NProgress.start();
             return getAxiosClient(this.user.token)
                 .post("/register", user)
                 .then(({ data }) => {
                     this.setUser(data);
+                    NProgress.done();
                     return data;
-                }).catch(err => {
-                    throw err
+                })
+                .catch((error) => {
+                    NProgress.done();
+                    throw error;
                 });
         },
         login(user) {
+            NProgress.start();
             return getAxiosClient(this.user.token)
                 .post("/login", user)
                 .then(({ data }) => {
                     this.setUser(data);
+                    NProgress.done();
                     return data;
+                })
+                .catch((error) => {
+                    NProgress.done();
+                    throw error;
                 });
         },
         logout() {
+            NProgress.start();
             return getAxiosClient(this.user.token)
                 .post("/logout")
                 .then(({ data }) => {
                     (this.user.data = {}), (this.user.token = null);
                     sessionStorage.removeItem("TOKEN");
+                    NProgress.done();
                     return data;
+                })
+                .catch((error) => {
+                    NProgress.done();
+                    throw error;
                 });
         },
         setUser(token) {

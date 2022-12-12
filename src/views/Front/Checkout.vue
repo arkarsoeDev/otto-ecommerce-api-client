@@ -67,7 +67,7 @@
                      <span class="font-bold text-green-700">{{ formatCurrency(paymentData.total) }}</span>
                   </div>
                </div>
-               <div class="relative block">
+               <div class="relative">
                   <button type="submit" form="BillingForm" :disabled="submitting" href="/checkout"
                      class="block w-full p-3 text-lg font-semibold bg-black text-white transition-colors border border-transparent hover:bg-white hover:text-black hover:border-black disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-70">
                      <div class="flex items-center justify-center">
@@ -96,7 +96,7 @@ import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import { useCartStore } from '@/stores/cart'
 import { useShopStore } from '@/stores/shop'
 import { useAppStore } from '@/stores/app'
-import Input from '@/components/Front/Input.vue';
+import Input from '@/components/Front/Form/Input.vue';
 import { onMounted, ref } from 'vue';
 import { formatCurrency } from '@/helpers'
 import { useRouter } from 'vue-router';

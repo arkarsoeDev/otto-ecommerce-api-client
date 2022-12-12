@@ -18,14 +18,14 @@
                         class="main-image w-full h-full object-contain" alt="">
                   </div>
 
-                  <div>
+                  <div class="h-[60px] min-[425px]:h-[100px] md:h-[145px] lg:h-[145px] xl:h-[100px]">
                      <swiper :modules="modules" :slidesPerView="4" :centeredSlides="false" :spaceBetween="10"
                         :pagination="{
                            type: 'progressbar',
-                        }" :navigation="false" :virtual="true" class="mySwiper"
+                        }" :scrollbar="true" :navigation="false" :virtual="true" class="mySwiper"
                         @swiper="setSwiperRef">
                         <swiper-slide v-for="(photo, index) in product.photos" :key="index" :virtualIndex="index">
-                           <img @click="changeImage(photo.url)" :src="photo.url" class="side-image w-full h-full select-none shadow-lg" alt="">
+                           <img @click="changeImage(photo.url)" :src="photo.url" class="side-image w-full h-full select-none shadow-lg hover:cursor-pointer" alt="">
                         </swiper-slide>
                      </swiper>
                   </div>
@@ -213,7 +213,7 @@ onMounted(() => {
    align-items: center;
 }
 
-.swiper-slide img {
+.swiper-slide img { 
    display: block;
    width: 100%;
    height: 100%;
@@ -222,8 +222,6 @@ onMounted(() => {
 
 .swiper {
    width: 100%;
-   height: 100px;
-   margin: 20px auto;
+   height: 100%;
 }
-
 </style>
