@@ -6,9 +6,9 @@
                <Product v-for="product in products" :product="product"></Product>
             </div>
             <div class="w-full text-center">
-               <a href=""
+               <router-link :to="{ name: 'Shop'}"
                   class="inline-block p-2 bg-slate-800 text-white border border-slate-800 transition hover:bg-white hover:text-black">View
-                  More</a>
+                  More</router-link>
             </div>
          </div>
       </section>

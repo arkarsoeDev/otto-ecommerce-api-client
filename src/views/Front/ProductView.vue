@@ -18,7 +18,7 @@
                         class="main-image w-full h-full object-contain" alt="">
                   </div>
 
-                  <div class="h-[60px] min-[425px]:h-[100px] md:h-[145px] lg:h-[145px] xl:h-[100px]">
+                  <div class="h-[60px] min-[425px]:h-[100px] md:h-[145px] lg:h-[145px] xl:h-[100px] overflow-auto">
                      <swiper :modules="modules" :slidesPerView="4" :centeredSlides="false" :spaceBetween="10"
                         :pagination="{
                            type: 'progressbar',

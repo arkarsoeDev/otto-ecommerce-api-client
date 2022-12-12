@@ -13,25 +13,20 @@ export const useShopStore = defineStore("shop", {
     }),
     actions: {
         fetchCategories() {
-            NProgress.start()
+            NProgress.start();
             return getAxiosClient()
                 .get("/categories")
                 .then(({ data }) => {
-                    NProgress.done()
+                    NProgress.done();
                     return data;
                 })
-                .catch(error => {
-                    NProgress.done()
-                throw error
-            })
+                .catch((error) => {
+                    NProgress.done();
+                    throw error;
+                });
         },
-        fetchProducts({
-            url = null,
-            search,
-            category,
-            sort,
-        } = {}) {
-            NProgress.start()
+        fetchProducts({ url = null, search, category, sort, paginate='true', count=null } = {}) {
+            NProgress.start();
             url = url ?? "/products";
             return getAxiosClient()
                 .get(url, {
@@ -39,29 +34,31 @@ export const useShopStore = defineStore("shop", {
                         search,
                         category,
                         sort,
+                        paginate,
+                        count,
                     },
                 })
-                .then(({ data }) => {
-                    NProgress.done()
-                    return data
-                })
-                .catch(error => {
-                    NProgress.done()
-                    throw error
-                })
-        },
-        fetchProduct(slug) {
-            NProgress.start()
-            return getAxiosClient()
-                .get('/products/'+slug)
                 .then(({ data }) => {
                     NProgress.done();
                     return data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     NProgress.done();
-                    throw error
+                    throw error;
+                });
+        },
+        fetchProduct(slug) {
+            NProgress.start();
+            return getAxiosClient()
+                .get("/products/" + slug)
+                .then(({ data }) => {
+                    NProgress.done();
+                    return data;
                 })
+                .catch((error) => {
+                    NProgress.done();
+                    throw error;
+                });
         },
         checkout(payload) {
             return getAxiosClient()
@@ -70,8 +67,8 @@ export const useShopStore = defineStore("shop", {
                     return data;
                 })
                 .catch((error) => {
-                    throw error
-                })
+                    throw error;
+                });
         },
         payment(payload) {
             return getAxiosClient()
@@ -79,10 +76,9 @@ export const useShopStore = defineStore("shop", {
                 .then(({ data }) => {
                     return data;
                 })
-                .catch(err => {
-                    throw err
-                })
-                ;
+                .catch((err) => {
+                    throw err;
+                });
         },
         setActiveCategory(category) {
             this.activeCategory = category;
@@ -91,10 +87,10 @@ export const useShopStore = defineStore("shop", {
             this.activeSort = sort;
         },
         setPaymentData(payload) {
-            this.paymentData = payload
+            this.paymentData = payload;
         },
         setPaymentMessage(payload) {
-            this.paymentMessage = payload
-        }
+            this.paymentMessage = payload;
+        },
     },
 });
