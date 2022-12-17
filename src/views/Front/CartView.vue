@@ -8,7 +8,7 @@
 
    <template v-if="cartStore.cart.items.length > 0">
       <section>
-         <div class="container mx-auto px-8 lg:px-24 mb-12">
+         <div class="mb-12">
             <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
             <div>
                <div class="overflow-auto mb-6">
@@ -84,7 +84,7 @@
 
       <!-- shipping tax and subtotal -->
       <section>
-         <div class="container mx-auto px-8 lg:px-24 mb-12">
+         <div class="mb-12">
             <div class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
                <div>
                   <h3 class="font-bold text-lg mb-3 p-3 border border-gray-200 inline-block">Cart Total</h3>
@@ -121,7 +121,7 @@
       </section>
    </template>
    <template v-else>
-      <div class="container mx-auto px-8 lg:px-24 mb-12">
+      <div class="mb-12">
          <div class="flex justify-center items-center">
             <h1 class="text-3xl">There is nothing in cart yet.</h1>
          </div>

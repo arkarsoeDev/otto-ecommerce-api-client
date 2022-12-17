@@ -3,7 +3,9 @@
       <header>
          <Nav></Nav>
       </header>
-      <RouterView />
+      <div :class="{'container mx-auto mb-9 px-4 lg:px-24': route.name != 'Home'}">
+         <RouterView />
+      </div>
       <Footer></Footer>
       <Backdrop v-if="appStore.mobileNav" @click="toggleMobileNav"></Backdrop>
    </div>
@@ -12,21 +14,21 @@
 import Nav from '@/components/Front/nav.vue'
 import Footer from '@/components/Front/Footer.vue'
 import Backdrop from '@/components/Front/Backdrop.vue'
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import { watch } from 'vue';
 import { useAppStore } from '../../stores/app';
 import Swal from 'sweetalert2';
 
-
 const appStore = useAppStore();
+const route = useRoute();
 
 watch(() => appStore.message, (newValue, oldValue) => {
    if (newValue) {
       showToast(newValue)
    }
-}, { deep: true})
+}, { deep: true })
 
-const showToast =function(message) {
+const showToast = function (message) {
    const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',

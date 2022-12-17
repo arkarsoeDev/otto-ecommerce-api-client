@@ -5,7 +5,7 @@
       </BreadcrumbItem>
    </Breadcrumb>
    <section v-if="paymentData">
-      <div class="container mx-auto px-8 lg:px-24 mb-12">
+      <div class="mb-12">
          <div class="grid grid-cols-1 gap-y-8 md:gap-y-0 md:gap-x-8 md:grid-cols-12 ">
             <div class="md:col-span-7 lg:col-span-8">
                <h1 class="text-2xl font-bold mb-8">Billing Detail</h1>

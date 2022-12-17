@@ -1,11 +1,11 @@
 <template>
    <div class="relative">
-      <button :disabled="submitting" type="submit"
-         class="group inline-block px-7 py-3 bg-indigo-900 text-white select-none font-medium text-sm leading-snug uppercase shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out w-full  disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-70 disabled:hover:shadow-md">
+      <button :form="form" :disabled="submitting" type="submit"
+         class="group inline-block px-7 py-3 bg-indigo-900 text-white select-none font-medium text-sm leading-snug uppercase shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out w-full disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:opacity-70 disabled:hover:shadow-md">
          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-            <LockClosedIcon class="h-5 w-5 text-white group-hover:text-gray-200 group-disabled:text-white" aria-hidden="true" />
+            <slot name="icon"></slot>
          </span>
-         <slot>Submit</slot>
+         <slot class="ml-2">Submit</slot>
       </button>
       <template v-if="submitting">
          <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
@@ -16,13 +16,14 @@
 </template>
 
 <script setup>
-import { LockClosedIcon } from '@heroicons/vue/20/solid';
 import Loading from '@/components/Front/Loading.vue';
-
 defineProps({
    submitting: {
       type: Boolean,
       default: false,
+   },
+   form: {
+      type: String,
    }
 }) 
 </script>

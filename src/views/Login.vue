@@ -59,7 +59,15 @@ function login() {
          submitting.value = false
          router.push({ name: route.meta.previousRoute ?? 'Home' })
       }).catch(error => {
-         errors.value = error.response.data.errors
+         console.log(error.response.data.message)
+
+         if (error.response.status === 403) {
+            errors.value.email = [error.response.data.message]
+            errors.value.password = [error.response.data.message]
+         }
+         else {
+            errors.value = error.response.data.errors
+         }
          submitting.value = false
       })
 }

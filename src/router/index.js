@@ -11,6 +11,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Orders from "@/views/Front/Orders.vue";
 import Order from "@/views/Front/Order.vue";
+import Profile from "@/views/Front/Profile.vue";
 import { useUserStore } from "../stores/user";
 import { useAppStore } from "../stores/app";
 
@@ -63,6 +64,11 @@ const router = createRouter({
                     name: "Order",
                     component: Order,
                     props: true,
+                },
+                {
+                    path: "/profile",
+                    name: "Profile",
+                    component: Profile,
                 },
             ],
         },

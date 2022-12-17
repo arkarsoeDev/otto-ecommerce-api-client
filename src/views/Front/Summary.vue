@@ -1,6 +1,6 @@
 <template>
    <section v-if="!loading">
-      <div class="container mx-auto px-8 lg:px-24 w-full text-center my-20">
+      <div class="w-full text-center my-20">
          <h1 class="text-2xl font-bold mb-3">Thank You for Your Order!</h1>
          <p class="mb-6">{{ shopStore.paymentMessage }}</p>
          <a href=""
