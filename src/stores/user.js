@@ -57,6 +57,7 @@ export const useUserStore = defineStore("user", {
                 .then(({ data }) => {
                     (this.user.data = {}), (this.user.token = null);
                     sessionStorage.removeItem("TOKEN");
+                    sessionStorage.removeItem("USER");
                     NProgress.done();
                     return data;
                 })

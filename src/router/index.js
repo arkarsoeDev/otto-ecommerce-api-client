@@ -5,7 +5,7 @@ import Home from "@/views/Front/Home.vue";
 import Shop from "@/views/Front/Shop.vue";
 import ProductView from "@/views/Front/ProductView.vue";
 import CartView from "@/views/Front/CartView.vue";
-import Checkout from '@/views/Front/Checkout.vue';
+import Checkout from "@/views/Front/Checkout.vue";
 import Summary from "@/views/Front/Summary.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
@@ -55,20 +55,27 @@ const router = createRouter({
                     component: Summary,
                 },
                 {
-                    path: "/orders",
-                    name: "Orders",
-                    component: Orders,
-                },
-                {
-                    path: "/orders/:id",
-                    name: "Order",
-                    component: Order,
-                    props: true,
-                },
-                {
-                    path: "/profile",
-                    name: "Profile",
-                    component: Profile,
+                    path: "/profileAuth",
+                    redirect: "Profile",
+                    meta: { requiresAuth: true },
+                    children: [
+                        {
+                            path: "/orders",
+                            name: "Orders",
+                            component: Orders,
+                        },
+                        {
+                            path: "/orders/:id",
+                            name: "Order",
+                            component: Order,
+                            props: true,
+                        },
+                        {
+                            path: "/profile",
+                            name: "Profile",
+                            component: Profile,
+                        },
+                    ],
                 },
             ],
         },
@@ -78,20 +85,24 @@ const router = createRouter({
             name: "Auth",
             component: AuthLayout,
             meta: { isGuest: true },
-            beforeEnter: (to, from, next) => {
-                to.meta.previousRoute = from.name;
-                next();
-            },
             children: [
                 {
                     path: "/login",
                     name: "Login",
                     component: Login,
+                    beforeEnter: (to, from, next) => {
+                        to.meta.previousRoute = from.name;
+                        next();
+                    },
                 },
                 {
                     path: "/register",
                     name: "Register",
                     component: Register,
+                    beforeEnter: (to, from, next) => {
+                        to.meta.previousRoute = from.name;
+                        next();
+                    },
                 },
             ],
         },
@@ -105,12 +116,12 @@ router.beforeEach((to, from, next) => {
     appStore.mobileNav = false;
 
     if (to.meta.requiresAuth && !userStore.user.token) {
-        next({name: 'Login'})
-    } else if(userStore.user.token && to.meta.isGuest) {
-        next({name: 'Home'});
+        next({ name: "Login" });
+    } else if (userStore.user.token && to.meta.isGuest) {
+        next({ name: "Home" });
     } else {
         next();
     }
-})
+});
 
 export default router;

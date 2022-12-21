@@ -4,23 +4,18 @@
          <ChevronLeftIcon class="w-5 h-5 font-semibold"></ChevronLeftIcon>
       </BreadcrumbItem>
    </Breadcrumb>
-   <section v-if="!loading">
-      <div class="mt-3 mb-9">
-         <h1 class="text-4xl font-semibold">Orders</h1>
-      </div>
-      <template v-if="(orders.data && orders.data.length <= 0)">
-         <div class="text-center h-[300px]">
-            <h1 class="text-xl font-bold">No orders yet.</h1>
+   <template v-if="!loading">
+      <section>
+         <div class="mt-3 mb-9">
+            <h1 class="text-4xl font-semibold">Orders</h1>
          </div>
-      </template>
-      <template v-else>
          <div
             class="bg-white shadow-sm flex flex-col items-start justify-between border w-full p-3 mb-3 sm:flex-row sm:items-center">
             <div class="mb-3 sm:mb-0">
-               <span class="inline-block mr-3">Per Page</span><input type="text" v-model="perPage"
-                  class="form-input px-3 py-1 w-16">
+               <span class="inline-block mr-3">Per Page</span><input @change="fetchOrders(null)" type="text"
+                  v-model="perPage" class="form-input px-3 py-1 w-16 h-[45px]">
             </div>
-            <input type="text" class="form-input px-3 py-1" v-model="search" placeholder="search">
+            <Search v-model="search" @fetchPayload="fetchOrders(null)"></Search>
          </div>
          <div class="overflow-x-auto border shadow-sm mb-3">
             <table class="table overflow-hidden w-full">
@@ -35,9 +30,9 @@
                <tbody>
                   <tr v-for="order in orders.data" :key="order.id" class="bg-white border-b">
                      <td class="py-3 px-6"><span class="font-bold">{{ order.id }}</span></td>
-                     <td class="py-3 px-6"><span class="font-semibold">{{ order.billing_total }}</span>
+                     <td class="py-3 px-6"><span class="font-semibold">{{ formatCurrency(order.billing_total) }}</span>
                      </td>
-                     <td class="py-3 px-6"><span class="font-semibold">{{ order.created_at }}</span>
+                     <td class="py-3 px-6"><span class="font-semibold">{{ formatDate(order.created_at) }}</span>
                      </td>
                      <td class="py-3 px-6 whitespace-nowrap">
                         <div>
@@ -50,10 +45,13 @@
                         </div>
                      </td>
                   </tr>
+                  <tr v-if="orders.data.length <= 0">
+                     <td class="py-9 text-xl bg-white text-center font-bold" colspan="4">There is no order yet</td>
+                  </tr>
                </tbody>
             </table>
          </div>
-         <div
+         <div v-if="orders.meta && orders.meta.last_page <= 1 ? false : true"
             class="bg-white shadow-sm text-center border w-full p-3 mb-9 sm:flex sm:items-center sm:justify-between">
             <div v-if="!appStore.mobile" class="font-semibold mb-3 my-auto">
                <p>Showing from {{ orders.meta.from }} to {{ orders.meta.to }} in total {{ orders.meta.total }} items
@@ -65,8 +63,8 @@
             <Pagination v-if="orders.meta && !appStore.mobile" :mobile="appStore.mobile" :links="orders.meta.links"
                @fetchLink="fetchOrders"></Pagination>
          </div>
-      </template>
-   </section>
+      </section>
+   </template>
    <template v-if="loading">
       <div>
          <p>Loading ...</p>
@@ -78,6 +76,8 @@
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
 import Pagination from '@/components/Front/Pagination.vue';
+import Search from '@/components/Front/Search.vue';
+import { formatCurrency, formatDate } from '@/helpers';
 import { ChevronLeftIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { onMounted, ref } from 'vue';
 import { useOrderStore } from '@/stores/order';
@@ -95,6 +95,7 @@ onMounted(() => {
 })
 
 const fetchOrders = async (url = null, page = null) => {
+   loading.value = true
    try {
       const res = await orderStore.fetchOrders({
          url,

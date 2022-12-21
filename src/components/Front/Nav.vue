@@ -88,7 +88,7 @@
                </h1>
                <a href=""
                   class="inline-flex items-center p-3 border-2 border-black font-bold text-lg hover:bg-black hover:text-gray-100"><span
-                     class="mr-3">Shop by Lacket</span>
+                     class="mr-3">Shop by Laptop</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                      class="w-6 h-6 inline">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

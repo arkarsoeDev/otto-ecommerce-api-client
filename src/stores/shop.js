@@ -25,7 +25,14 @@ export const useShopStore = defineStore("shop", {
                     throw error;
                 });
         },
-        fetchProducts({ url = null, search, category, sort, paginate='true', count=null } = {}) {
+        fetchProducts({
+            url = null,
+            search,
+            category,
+            sort,
+            paginate = "true",
+            count = null,
+        } = {}) {
             NProgress.start();
             url = url ?? "/products";
             return getAxiosClient()
@@ -73,6 +80,16 @@ export const useShopStore = defineStore("shop", {
         payment(payload) {
             return getAxiosClient()
                 .post("/payment", payload)
+                .then(({ data }) => {
+                    return data;
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        },
+        guestPayment(payload) {
+            return getAxiosClient()
+                .post("/guest-payment", payload)
                 .then(({ data }) => {
                     return data;
                 })

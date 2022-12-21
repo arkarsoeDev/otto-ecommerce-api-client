@@ -96,6 +96,7 @@ import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import { useCartStore } from '@/stores/cart'
 import { useShopStore } from '@/stores/shop'
 import { useAppStore } from '@/stores/app'
+import { useUserStore } from '@/stores/user'
 import Input from '@/components/Front/Form/Input.vue';
 import { onMounted, ref } from 'vue';
 import { formatCurrency } from '@/helpers'
@@ -106,18 +107,16 @@ import NProgress, { done } from 'nprogress';
 import 'nprogress/nprogress.css';
 import Loading from '@/components/Front/Loading.vue';
 
+const userStore = useUserStore();
 const cartStore = useCartStore();
 const shopStore = useShopStore();
 const appStore = useAppStore();
 const router = useRouter();
 const billing = ref({
-   name: 'arkar',
-   email: 'a@clone.com',
-   phone: '000',
-   address: 'California',
-   state: 'California',
-   postal_code: '442',
-   city: 'Cali'
+   name: userStore.user.data.name ?? '',
+   email: userStore.user.data.email ?? '',
+   phone: userStore.user.data.phone ?? '',
+   ...userStore.user.data.addresses[0]
 });
 
 const now = new Date(Date.now()).toDateString()
@@ -181,11 +180,20 @@ const handleSubmit = async () => {
             stoken.name = "stoken"
             throw stoken
          }
-         const res = await shopStore.payment({
-            ...billing.value,
-            pi: paymentData.value.paymentIntentId,
-            stoken: stoken
-         })
+         let res = null;
+         if (userStore.user.token) {
+            res = await shopStore.payment({
+               ...billing.value,
+               pi: paymentData.value.paymentIntentId,
+               stoken: stoken
+            })
+         } else {
+            res = await shopStore.guestPayment({
+               ...billing.value,
+               pi: paymentData.value.paymentIntentId,
+               stoken: stoken
+            })
+         }
          if (res.success) {
             cartStore.clearCart();
             console.log(res.success_message)
@@ -195,11 +203,19 @@ const handleSubmit = async () => {
          }
          console.log(res)
       } catch (error) {
+         console.log(error)
          if (error.name === "stoken") {
             errors.value.card = error.error.message
             return
          }
-         errors.value = error.response.data.errors
+         if (error.response.data.message) {
+            appStore.addMessage({
+               type: 'error',
+               content: error.response.data.message
+            })
+         } else {
+            errors.value = error.response.data.errors
+         }
       }
       finally {
          NProgress.done()

@@ -76,17 +76,17 @@
       <div class="p-4 bg-white border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
          <h5 class="mb-6 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Billing Information</h5>
          <form ref="updateBillingInfoForm" @submit.prevent="updateBillingInfo">
-            <Input id="address" name="address" class="mb-4" v-model="billingInfo.address" placeholder="address"
-               :errorMessage="billingInfoErrors.address ? billingInfoErrors.address[0] : false">address</Input>
-            <Input id="city" name="city" class="mb-4" v-model="billingInfo.city" placeholder="city"
-               :errorMessage="billingInfoErrors.city ? billingInfoErrors.city[0] : false">city</Input>
-            <Input id="state" name="state" class="mb-4" v-model="billingInfo.state" placeholder="state"
-               :errorMessage="billingInfoErrors.state ? billingInfoErrors.state[0] : false">state</Input>
-            <Input id="postal_code" name="postal_code" class="mb-4" v-model="billingInfo.postal_code"
-               placeholder="postal_code"
-               :errorMessage="billingInfoErrors.postal_code ? billingInfoErrors.postal_code[0] : false">postal_code</Input>
-            <Input id="billing_password" name="password" class="mb-4" v-model="billingInfo.password"
-               placeholder="password" :errorMessage="billingInfoErrors.password ? billingInfoErrors.password[0] : false">password</Input>
+            <Input id="address" name="address" type="text" class="mb-4" v-model="billingInfo.address" placeholder="Address"
+               :errorMessage="billingInfoErrors.address ? billingInfoErrors.address[0] : false">Address</Input>
+            <Input id="city" name="city" type="text" class="mb-4" v-model="billingInfo.city" placeholder="City"
+               :errorMessage="billingInfoErrors.city ? billingInfoErrors.city[0] : false">City</Input>
+            <Input id="state" name="state" type="text" class="mb-4" v-model="billingInfo.state" placeholder="State"
+               :errorMessage="billingInfoErrors.state ? billingInfoErrors.state[0] : false">State</Input>
+            <Input id="postal_code" name="postal_code" type="text" class="mb-4" v-model="billingInfo.postal_code"
+               placeholder="Postal Code"
+               :errorMessage="billingInfoErrors.postal_code ? billingInfoErrors.postal_code[0] : false">Postal Code</Input>
+            <Input id="billing_password" name="password" type="password" class="mb-4" v-model="billingInfo.password"
+               placeholder="Password" :errorMessage="billingInfoErrors.password ? billingInfoErrors.password[0] : false">Password</Input>
             <div class="w-3/5 sm:w-1/3 lg:w-2/12 ml-auto">
                <Submit :submitting="submitting">
                   <template v-slot:icon>
@@ -122,6 +122,7 @@ const loading = ref(false)
 const user = ref({
    name: userStore.user.data.name,
    email: userStore.user.data.email,
+   phone: userStore.user.data.phone,
    password: '',
 })
 

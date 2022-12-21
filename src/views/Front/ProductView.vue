@@ -47,7 +47,7 @@
                      }}</span>
                </div>
                <div class="mb-6">
-                  <span class="text-green-700 font-bold text-3xl">${{ product.price }}</span>
+                  <span class="text-green-700 font-bold text-3xl">{{ formatCurrency(product.price) }}</span>
                </div>
                <p class="text-xl mb-6 font-bold">{{ product.details }}</p>
                <p class="mb-12">{{ product.description }}</p>
@@ -122,6 +122,7 @@ import { useShopStore } from '@/stores/shop'
 import Product from '@/components/Front/Product.vue';
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
+import { formatCurrency } from '@/helpers';
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import { useCartStore } from '@/stores/cart';
 import { useAppStore } from '@/stores/app';

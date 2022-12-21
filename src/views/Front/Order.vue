@@ -21,17 +21,17 @@
                </InfoItem>
                <InfoItem class="bg-gray-100" name="Shipped">
                   <span :class="{ 'bg-green-300': order.shipped != 0, 'bg-yellow-300': order.shipped == 0 }">{{
-                        order.shipped
+                        order.shipped == 0 ? false : true
                   }}</span>
                </InfoItem>
                <InfoItem class="bg-gray-100" name="Phone">
                   <span>{{ order.billing_phone }}</span>
                </InfoItem>
                <InfoItem class="bg-gray-100" name="Billing Total">
-                  <span>{{ order.billing_total }}</span>
+                  <span>{{ formatCurrency(order.billing_total) }}</span>
                </InfoItem>
                <InfoItem class="bg-gray-100 mb-0" name="Order Date">
-                  <span>{{ order.created_at }}</span>
+                  <span>{{ formatDate(order.created_at) }}</span>
                </InfoItem>
             </div>
             <div class="md:col-span-2">
@@ -63,6 +63,7 @@ import Loading from '@/components/Front/Loading.vue';
 import InfoItem from '@/components/Front/Partial/InfoItem.vue';
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
+import { formatCurrency, formatDate } from '@/helpers';
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import { ref, onMounted } from 'vue';
 import { useOrderStore } from '@/stores/order';
