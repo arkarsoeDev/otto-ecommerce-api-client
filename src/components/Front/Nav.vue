@@ -1,5 +1,5 @@
 <template>
-   <section :class="{ 'hero bg-blue-100 h-screen bg-[url(../assets/img/slide2.jpg)] bg-no-repeat bg-cover bg-[60%_top]': route.name === 'Home', 'bg-slate-800 text-white' : route.name !== 'Home'}">
+   <section :class="{ 'hero bg-blue-100 h-screen bg-[url(\'../assets/img/slide-2.jpg\')] bg-no-repeat bg-cover bg-[60%_top]' : route.name === 'Home', 'bg-slate-800 text-white' : route.name !== 'Home'}">
       <!-- mobile nav -->
       <div class="mobile-nav fixed top-0 transition-transform py-8 px-4 w-2/3 bg-black h-screen z-20 md:w-2/6 lg:hidden"
          :class="{ '-translate-x-full': !appStore.mobileNav, 'translate-x-0': appStore.mobileNav }">
@@ -84,16 +84,16 @@
          <div v-if="route.name === 'Home'" class="flex items-center px-8 h-[60vh] overflow-hidden lg:px-24">
             <div class="px-8 py-8 bg-white bg-opacity-40">
                <h1 class="w-auto mb-5 text-4xl font-['Oswald'] font-bold uppercase sm:w-[26rem] lg:leading-[4rem] lg:text-5xl">
-                  New Sale on Laptop Up to 30%
+                  New Items Arrive
                </h1>
-               <a href=""
+               <router-link :to="{name: 'Shop'}"
                   class="inline-flex items-center p-3 border-2 border-black font-bold text-lg hover:bg-black hover:text-gray-100"><span
-                     class="mr-3">Shop by Laptop</span>
+                     class="mr-3">Go to shop</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                      class="w-6 h-6 inline">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-               </a>
+               </router-link>
             </div>
          </div>
       </div>
@@ -115,6 +115,8 @@ const cartStore = useCartStore()
 const userStore = useUserStore()
 
 const route = useRoute();
+
+"hero bg-blue-100 h-screen bg-[url('../assets/img/slide-2.jpg')] bg-no-repeat bg-cover bg-[60%_top]"
 
 const toggleMobileNav = function () {
    appStore.toggleMobileNav();

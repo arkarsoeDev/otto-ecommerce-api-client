@@ -112,7 +112,7 @@
       </section>
    </template>
    <template v-else>
-      <h1>is loading</h1>
+      <Loading class="flex items-center justify-center h-screen w-full" layout="w-12 h-12"></Loading>
    </template>
 </template>
 
@@ -121,6 +121,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useShopStore } from '@/stores/shop'
 import Product from '@/components/Front/Product.vue';
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
+import Loading from '@/components/Front/Loading.vue';
 import BreadcrumbItem from '@/components/Front/Partial/BreadcrumbItem.vue';
 import { formatCurrency } from '@/helpers';
 import { ChevronLeftIcon } from '@heroicons/vue/20/solid';

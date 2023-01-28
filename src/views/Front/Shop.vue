@@ -4,7 +4,7 @@
          <ChevronLeftIcon class="w-5 h-5 font-semibold"></ChevronLeftIcon>
       </BreadcrumbItem>
    </Breadcrumb>
-   <section v-if="!loading && products.data">
+   <section v-if="!loading">
       <div class="flex items-start justify-between flex-col mb-9 sm:mb-16 sm:flex-row sm:items-center">
          <h1 class="text-3xl font-bold mb-6 sm:mb-0">Products</h1>
          <form @submit.prevent="fetchProducts(null)" class="w-full sm:w-auto">
@@ -81,7 +81,7 @@
    </section>
    <template v-if="loading">
       <div>
-         <p>Loading ...</p>
+         <Loading class="flex items-center justify-center h-screen w-full" layout="w-12 h-12"></Loading>
       </div>
    </template>
 </template>
@@ -94,6 +94,7 @@ import Pagination from '@/components/Front/Pagination.vue';
 import Collapse from '@/components/Front/Collapse.vue';
 import Product from '@/components/Front/Product.vue';
 import Breadcrumb from '@/components/Front/Breadcrumb.vue';
+import Loading from '@/components/Front/Loading.vue';
 import BreadcrumbItem from '../../components/Front/Partial/BreadcrumbItem.vue';
 import { ChevronLeftIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 
